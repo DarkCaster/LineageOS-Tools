@@ -12,3 +12,5 @@ scripts_dir="$self_dir/scripts"
 
 "$scripts_dir/00-cleanup.sh" "$self_dir"
 "$scripts_dir/01-download.sh" "$fdroid_url" "$self_dir"
+"$scripts_dir/02-apply-patches.sh" "$self_dir"
+"$scripts_dir/03-create-package.sh" "$self_dir"

@@ -15,3 +15,5 @@ if [[ -d $workdir/.pc ]]; then
   echo "cleaning-up quilt '.pc' directory at $workdir"
   rm -rf "$workdir/.pc"
 fi
+
+rm -v "$workdir/"*.zip
