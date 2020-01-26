@@ -2,8 +2,11 @@ Index: FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
 ===================================================================
 --- FDroid_OTA_Packager.orig/workspace/META-INF/com/google/android/update-binary
 +++ FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
-@@ -30,13 +30,37 @@ ADDOND=80-fdroid.sh
+@@ -28,15 +28,42 @@ PERM_DIR="etc/permissions"
+ PERM=permissions_org.fdroid.fdroid.privileged.xml
+ ADDOND=80-fdroid.sh
  SYSTEM="/system"
++TARGET="/system_not_defined"
  
  mount_system() {
 -  mount /system
@@ -12,8 +15,9 @@ Index: FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
    system_as_root=`getprop ro.build.system_root_image`
    if [ "$system_as_root" == "true" ]; then
 -    SYSTEM="/system/system"
-+    SYSTEM="/system_root"
-+    if mount $SYSTEM; then
++    TARGET="/system_root"
++    SYSTEM="$TARGET/system"
++    if mount $TARGET; then
 +      return 0
 +    fi
 +    active_slot=`getprop ro.boot.slot_suffix`
@@ -22,20 +26,21 @@ Index: FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
 +    else
 +      block=/dev/block/bootdevice/by-name/system
 +    fi
-+    mkdir -p $SYSTEM
-+    if mount -o rw $block $SYSTEM ||
-+       mount -o rw $block $SYSTEM -t ext4 ||
-+       mount -o rw $block $SYSTEM -t f2fs; then
++    mkdir -p $TARGET
++    if mount -o rw $block $TARGET ||
++       mount -o rw $block $TARGET -t ext4 ||
++       mount -o rw $block $TARGET -t f2fs; then
 +      return 0
 +    fi
 +  else
-+    SYSTEM="/system"
-+    if mount $SYSTEM; then
++    TARGET="/system"
++    SYSTEM="$TARGET"
++    if mount $TARGET; then
 +      return 0
 +    fi
 +    # Try to get the block from /etc/recovery.fstab
 +    block=`cat /etc/recovery.fstab | cut -d '#' -f 1 | grep /system | grep -o '/dev/[^ ]*' | head -1`
-+    if [ -n "$block" ] && mount $block $SYSTEM; then
++    if [ -n "$block" ] && mount $block $TARGET; then
 +      return 0
 +    fi
    fi
@@ -44,23 +49,3 @@ Index: FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
  }
  
  cd /tmp
-@@ -44,6 +68,7 @@ mkdir fdroid
- cd fdroid
- unzip -o "$3"
- 
-+umount /system
- mount_system
- 
- rm -rf "${SYSTEM}/app/FDroid"*
-@@ -88,8 +113,10 @@ cp ${FDROID} ${FDROIDDIR}
- chmod 644 ${FDROIDDIR}/${FDROID}
- 
- cp ${ADDOND} ${SYSTEM}/addon.d/
-+chcon u:object_r:system_file:s0 ${SYSTEM}/addon.d/${ADDOND}
- 
--umount /system
-+umount ${SYSTEM}
-+sync
- 
- echo -n -e 'ui_print done\n' > /proc/self/fd/$2
- echo -n -e 'ui_print\n' > /proc/self/fd/$2

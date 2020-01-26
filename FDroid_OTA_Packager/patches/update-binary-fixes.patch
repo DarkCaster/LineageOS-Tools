@@ -1,0 +1,23 @@
+Index: FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
+===================================================================
+--- FDroid_OTA_Packager.orig/workspace/META-INF/com/google/android/update-binary
++++ FDroid_OTA_Packager/workspace/META-INF/com/google/android/update-binary
+@@ -71,6 +71,7 @@ mkdir fdroid
+ cd fdroid
+ unzip -o "$3"
+ 
++umount /system
+ mount_system
+ 
+ rm -rf "${SYSTEM}/app/FDroid"*
+@@ -116,7 +117,9 @@ chmod 644 ${FDROIDDIR}/${FDROID}
+ 
+ cp ${ADDOND} ${SYSTEM}/addon.d/
+ 
+-umount /system
++chcon u:object_r:system_file:s0 ${SYSTEM}/addon.d/${ADDOND}
++sync
++umount ${TARGET}
+ 
+ echo -n -e 'ui_print done\n' > /proc/self/fd/$2
+ echo -n -e 'ui_print\n' > /proc/self/fd/$2
