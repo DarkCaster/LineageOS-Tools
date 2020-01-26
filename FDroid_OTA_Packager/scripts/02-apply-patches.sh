@@ -8,5 +8,5 @@ workdir="$1"
 
 echo "applying patches at $workdir"
 pushd 1>/dev/null "$workdir"
-quilt push
+quilt push -a
 popd 1>/dev/null
