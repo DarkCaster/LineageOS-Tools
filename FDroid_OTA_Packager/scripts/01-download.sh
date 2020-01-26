@@ -8,6 +8,7 @@ zip="$1"
 
 workdir="$2"
 [[ -z $workdir ]] && workdir="$PWD"
+workdir="$workdir/workspace"
 
 echo "preparing workspace at $workdir"
 mkdir -p "$workdir"
@@ -19,5 +20,4 @@ wget -nv --show-progress -O fdroid.zip "$zip"
 rm fdroid.zip
 find "META-INF" -type f -exec dos2unix "{}" \;
 find . -maxdepth 1 -type f -name "*.sh" -exec dos2unix "{}" \;
-
 popd 1>/dev/null

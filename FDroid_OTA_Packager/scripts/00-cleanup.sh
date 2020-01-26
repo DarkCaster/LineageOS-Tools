@@ -4,8 +4,14 @@
 set -e
 
 workdir="$1"
-[[ -z $workdir ]] && echo "usage: cleanup.sh <dest dir>" && exit 1 
-[[ ! -d $workdir ]] && exit 0
+[[ -z $workdir ]] && echo "usage: cleanup.sh <base dir>" && exit 1
 
-echo "cleaning-up workspace at $workdir"
-rm -rf "$workdir"/*
+if [[ -d $workdir/workspace ]]; then
+  echo "cleaning-up workspace at $workdir"
+  rm -rf "$workdir/workspace"/*
+fi
+
+if [[ -d $workdir/.pc ]]; then
+  echo "cleaning-up quilt '.pc' directory at $workdir"
+  rm -rf "$workdir/.pc"
+fi
