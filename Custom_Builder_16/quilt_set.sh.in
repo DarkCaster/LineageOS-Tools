@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+
+#
+# this script should be sourced into current env
+# PWD should be on same level
+#
+
+[[ -z $self_dir ]] && self_dir="$PWD"
+[[ -z $patches_dir ]] && patches_dir="$target_device"
+
+export QUILT_PATCHES="$self_dir/$patches_dir"
+rm -rf "$self_dir/.pc"

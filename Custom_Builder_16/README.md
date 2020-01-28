@@ -1,0 +1,1 @@
+# Build scripts for Lineage OS 16 with some customizations and patches.
