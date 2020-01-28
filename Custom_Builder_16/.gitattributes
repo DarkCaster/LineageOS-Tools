@@ -1,1 +1,2 @@
 *.patch text=auto
+*.enc binary
