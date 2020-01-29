@@ -8,8 +8,8 @@ show_usage() {
   exit 1
 }
 
-lineage_scrdir="$1"
-[[ -z $lineage_scrdir ]] && show_usage
+lineage_srcdir="$1"
+[[ -z $lineage_srcdir ]] && show_usage
 
 target_file="$2"
 [[ -z $target_file ]] && show_usage
@@ -26,7 +26,7 @@ tmp_dir=$(mktemp -d --tmpdir="$tmp_dir" keys.XXXXXXXXX)
 key_dir="$tmp_dir/keys"
 mkdir -p "$key_dir"
 
-pushd 1>/dev/null "$lineage_scrdir"
+pushd 1>/dev/null "$lineage_srcdir"
 subject='/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com'
 echo "Creating signing keys..."
 for key in releasekey platform shared media testkey; do

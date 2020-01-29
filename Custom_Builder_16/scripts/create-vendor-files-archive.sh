@@ -8,8 +8,8 @@ show_usage() {
   exit 1
 }
 
-lineage_scrdir="$1"
-[[ -z $lineage_scrdir ]] && show_usage
+lineage_srcdir="$1"
+[[ -z $lineage_srcdir ]] && show_usage
 
 vendor="$2"
 [[ -z $vendor ]] && show_usage
@@ -23,4 +23,4 @@ self_dir="$( cd "$( dirname "$0" )" && pwd )"
 rm -fv "$target_file"
 
 echo "Creating archive with vendor files for vendor: $vendor"
-"$self_dir/create-archive.sh" "$lineage_scrdir/vendor/$vendor" "$target_file"
+"$self_dir/create-archive.sh" "$lineage_srcdir/vendor/$vendor" "$target_file"
