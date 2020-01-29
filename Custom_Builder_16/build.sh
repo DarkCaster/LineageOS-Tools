@@ -30,14 +30,10 @@ skip_patches="false"
 #embed su addon
 export WITH_SU="true"
 
-#embed fdroid
-with_fdroid="true"
-
 ### end of settings
 
 [[ ! -d $lineage_srcdir ]] && echo "lineage source directory is missing :$lineage_srcdir" && show_usage
 [[ $target != "ota" ]] && skip_patches="true"
-[[ $cleanup_srcdir != true ]] && skip_patches="true" && echo "disable patch-apply stage because source dir cleanup is also disabled"
 
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
@@ -59,29 +55,7 @@ if [[ $cleanup_srcdir = true ]]; then
   popd 1>/dev/null
 fi
 
-if [[ $skip_patches != true ]]; then
-
-  #TODO: apply device specific patches
-  patches_dir="patches-common"
-  source "$self_dir/quilt_set.sh.in"
-  pushd 1>/dev/null "$lineage_srcdir"
-  [[ -d $QUILT_PATCHES ]] && echo "applying patches from directory $patches_dir" && quilt push -a
-  popd 1>/dev/null
-  source "$self_dir/quilt_unset.sh.in"
-
-  #TODO: fdroid setup
-  if [[ $with_fdroid = true ]]; then
-    patches_dir="fdroid"
-    source "$self_dir/quilt_set.sh.in"
-    pushd 1>/dev/null "$lineage_srcdir"
-    [[ -d $QUILT_PATCHES ]] && echo "applying patches from directory $patches_dir" && quilt push -a
-    popd 1>/dev/null
-    source "$self_dir/quilt_unset.sh.in"
-  fi
-else
-  echo "skipping applying patches"
-fi
-
+[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" push "$target_device"
 mkdir -p "$self_dir/output/$target_device"
 
 pushd 1>/dev/null "$lineage_srcdir"
@@ -150,4 +124,4 @@ pushd 1>/dev/null
 
 echo "cleaning up"
 rm -rf "$self_dir/temp"
-[[ $cleanup_srcdir = true ]] && clear_srcdir
+[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" pop "$target_device"
