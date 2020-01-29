@@ -88,7 +88,7 @@ if [[ $target = "vendor" ]]; then
   ./extract-files.sh
   popd 1>/dev/null
   echo "creating new vendor-files archive"
-  "$self_dir/create-vendor-files-archive.sh" "$lineage_srcdir" "$vendor" "$self_dir/private/$target_device.enc"
+  "$self_dir/scripts/create-vendor-files-archive.sh" "$lineage_srcdir" "$vendor" "$self_dir/private/$target_device.enc"
 else
   echo "unknown or unimplemented target: $target"
 fi
