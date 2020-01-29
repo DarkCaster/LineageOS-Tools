@@ -89,8 +89,14 @@ if [[ $target = "vendor" ]]; then
   popd 1>/dev/null
   echo "creating new vendor-files archive"
   "$self_dir/scripts/create-vendor-files-archive.sh" "$lineage_srcdir" "$vendor" "$self_dir/private/$target_device.enc"
+elif [[ $target = "keys" ]]; then
+  echo "generating new signing-keys and creating encrypted archive for storing it within repo"
+  "$self_dir/scripts/generate-keys.sh" "$lineage_srcdir" "$self_dir/private/keys.enc"
 else
   echo "unknown or unimplemented target: $target"
 fi
 
 pushd 1>/dev/null
+
+echo "cleaning up"
+rm -rf "$self_dir/temp"
