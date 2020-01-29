@@ -54,7 +54,9 @@ clear_srcdir() {
 
 if [[ $cleanup_srcdir = true ]]; then
   clear_srcdir
+  pushd 1>/dev/null "$lineage_srcdir"
   repo sync -c
+  popd 1>/dev/null
 fi
 
 if [[ $skip_patches != true ]]; then
