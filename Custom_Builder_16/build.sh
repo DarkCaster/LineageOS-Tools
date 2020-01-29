@@ -24,7 +24,7 @@ shift 3
 
 ### other settings
 
-cleanup_srcdir="false"
+cleanup_srcdir="true"
 skip_patches="false"
 
 #embed su addon
@@ -42,12 +42,20 @@ with_fdroid="true"
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
 
-#TODO: cleanup src dir
-if [[ $cleanup_srcdir = true ]]; then
-  #TODO: clean src dir
-  #TODO: repo sync
-  echo "TODO"
+clear_srcdir() {
+  echo "cleaning up sources directory"
+  pushd 1>/dev/null "$lineage_srcdir"
+  for victim in * .*; do
+    [[ $victim = "." || $victim = ".." || $victim = ".repo" ]] && continue
+    rm -rf "$victim"
+  done
+  popd 1>/dev/null
   exit 1
+}
+
+if [[ $cleanup_srcdir = true ]]; then
+  clear_srcdir
+  repo sync -c
 fi
 
 if [[ $skip_patches != true ]]; then
@@ -77,7 +85,7 @@ mkdir -p "$self_dir/output/$target_device"
 
 pushd 1>/dev/null "$lineage_srcdir"
 
-check_errors () {
+check_errors() {
   local status="$?"
   local msg="$@"
   if [[ $status != 0 ]]; then
@@ -141,4 +149,7 @@ pushd 1>/dev/null
 
 echo "cleaning up"
 rm -rf "$self_dir/temp"
-
+if [[ $cleanup_srcdir = true ]]; then
+  clear_srcdir
+  repo sync -c
+fi
