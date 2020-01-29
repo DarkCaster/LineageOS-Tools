@@ -35,9 +35,9 @@ with_fdroid="true"
 
 ### end of settings
 
+[[ ! -d $lineage_srcdir ]] && echo "lineage source directory is missing :$lineage_srcdir" && show_usage
 [[ $target != "ota" ]] && skip_patches="true"
-
-[[ ! -d $lineage_srcdir ]] && echo "lineage source directory is missing :$lineage_srcdir" && exit 1
+[[ $cleanup_srcdir != true ]] && skip_patches="true" && echo "disable patch-apply stage because source dir cleanup is also disabled"
 
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
@@ -73,6 +73,8 @@ else
   echo "skipping applying patches"
 fi
 
+mkdir -p "$self_dir/output/$target_device"
+
 pushd 1>/dev/null "$lineage_srcdir"
 
 echo "preparing build env"
@@ -92,6 +94,23 @@ if [[ $target = "vendor" ]]; then
 elif [[ $target = "keys" ]]; then
   echo "generating new signing-keys and creating encrypted archive for storing it within repo"
   "$self_dir/scripts/generate-keys.sh" "$lineage_srcdir" "$self_dir/private/keys.enc"
+elif [[ $target = "ota" ]]; then
+  echo "extracting signing-keys"
+  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
+  echo "extracting vendor files"
+  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/vendor"
+  echo "preparing build"
+  breakfast "$target_device"
+  echo "running build"
+  mka target-files-package otatools
+  echo "generating signed-target_files.zip"
+  ./build/tools/releasetools/sign_target_files_apks -o -d "$self_dir/temp/keys" "$OUT/obj/PACKAGING/target_files_intermediates/"*-target_files-*.zip signed-target_files.zip
+  echo "generating signed-ota_update.zip"
+  ./build/tools/releasetools/ota_from_target_files -k "$self_dir/temp/keys/releasekey" --block signed-target_files.zip signed-ota_update.zip
+  echo "saving build results to directory: $self_dir/output/$target_device"
+  build_date=$(date +%Y%m%d_%H%M)
+  mv signed-target_files.zip "$self_dir/output/$target_device/target_files_${target_device}_${build_date}.zip"
+  mv signed-ota_update.zip "$self_dir/output/$target_device/ota_update_${target_device}_${build_date}.zip"
 else
   echo "unknown or unimplemented target: $target"
 fi
@@ -100,3 +119,4 @@ pushd 1>/dev/null
 
 echo "cleaning up"
 rm -rf "$self_dir/temp"
+
