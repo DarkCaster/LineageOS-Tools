@@ -150,7 +150,4 @@ pushd 1>/dev/null
 
 echo "cleaning up"
 rm -rf "$self_dir/temp"
-if [[ $cleanup_srcdir = true ]]; then
-  clear_srcdir
-  repo sync -c
-fi
+[[ $cleanup_srcdir = true ]] && clear_srcdir
