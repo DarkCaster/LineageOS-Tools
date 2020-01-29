@@ -46,11 +46,10 @@ clear_srcdir() {
   echo "cleaning up sources directory"
   pushd 1>/dev/null "$lineage_srcdir"
   for victim in * .*; do
-    [[ $victim = "." || $victim = ".." || $victim = ".repo" ]] && continue
+    [[ $victim = "*" || $victim = "." || $victim = ".." || $victim = ".repo" ]] && continue
     rm -rf "$victim"
   done
   popd 1>/dev/null
-  exit 1
 }
 
 if [[ $cleanup_srcdir = true ]]; then
