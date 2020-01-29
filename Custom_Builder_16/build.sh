@@ -77,36 +77,58 @@ mkdir -p "$self_dir/output/$target_device"
 
 pushd 1>/dev/null "$lineage_srcdir"
 
-echo "preparing build env"
-source build/envsetup.sh
+check_errors () {
+  local status="$?"
+  local msg="$@"
+  if [[ $status != 0 ]]; then
+    echo "ERROR: operation finished with error code $status"
+    exit "$status"
+  fi
+}
 
 echo "running $target target"
 if [[ $target = "vendor" ]]; then
   vendor="$1"
   [[ -z $vendor ]] && echo "please provide device vendor name as the last parameter" && show_usage
+  echo "preparing build env"
+  set +e
+  source build/envsetup.sh
   breakfast "$target_device" || echo "fail was expected at this stage..."
   pushd 1>/dev/null "device/$vendor/$target_device"
+  check_errors
   echo "extracting vendor files"
   ./extract-files.sh
+  check_errors
   popd 1>/dev/null
+  set -e
   echo "creating new vendor-files archive"
   "$self_dir/scripts/create-vendor-files-archive.sh" "$lineage_srcdir" "$vendor" "$self_dir/private/$target_device.enc"
 elif [[ $target = "keys" ]]; then
   echo "generating new signing-keys and creating encrypted archive for storing it within repo"
   "$self_dir/scripts/generate-keys.sh" "$lineage_srcdir" "$self_dir/private/keys.enc"
 elif [[ $target = "ota" ]]; then
+  echo "preparing build env"
+  set +e
+  source build/envsetup.sh
   echo "extracting signing-keys"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
+  check_errors
   echo "extracting vendor files"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/vendor"
+  check_errors
   echo "preparing build"
   breakfast "$target_device"
+  check_errors
   echo "running build"
   mka target-files-package otatools
+  check_errors
   echo "generating signed-target_files.zip"
   ./build/tools/releasetools/sign_target_files_apks -o -d "$self_dir/temp/keys" "$OUT/obj/PACKAGING/target_files_intermediates/"*-target_files-*.zip signed-target_files.zip
+  check_errors
   echo "generating signed-ota_update.zip"
   ./build/tools/releasetools/ota_from_target_files -k "$self_dir/temp/keys/releasekey" --block signed-target_files.zip signed-ota_update.zip
+  check_errors
+  set -e
   echo "saving build results to directory: $self_dir/output/$target_device"
   build_date=$(date +%Y%m%d_%H%M)
   mv signed-target_files.zip "$self_dir/output/$target_device/target_files_${target_device}_${build_date}.zip"
