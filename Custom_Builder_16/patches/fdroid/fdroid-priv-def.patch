@@ -26,7 +26,7 @@ Index: Lineage16/vendor/lineage/config/common.mk
 +    F-DroidPrivilegedExtension
 +
 +PRODUCT_COPY_FILES += \
-+    packages/apps/FDroidPriv/permissions_org.fdroid.fdroid.privileged.xml:system/etc/permissions/permissions_org.fdroid.fdroid.privileged.xml
++    packages/apps/F-DroidPrivilegedExtension/permissions_org.fdroid.fdroid.privileged.xml:system/etc/permissions/permissions_org.fdroid.fdroid.privileged.xml
 +
  # Bootanimation
  PRODUCT_PACKAGES += \
