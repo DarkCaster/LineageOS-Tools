@@ -43,8 +43,8 @@ popd 1>/dev/null
 
 #fdroid patches
 if [[ $with_fdroid = true ]]; then
-  mkdir -p "$lineage_srcdir/packages/apps/FDroid"
-  mkdir -p "$lineage_srcdir/packages/apps/FDroidPriv"
+  mkdir -p "$lineage_srcdir/packages/apps/F-Droid"
+  mkdir -p "$lineage_srcdir/packages/apps/F-DroidPrivilegedExtension"
 
   #patch makefiles to include fdroid into build
   pushd 1>/dev/null "$lineage_srcdir"
@@ -57,7 +57,7 @@ if [[ $with_fdroid = true ]]; then
   #download and install fdroid files
   rm -rf "$self_dir/temp/workspace"
   "$self_dir/../FDroid_OTA_Packager/scripts/01-download.sh" "$fdroid_url" "$self_dir/temp"
-  mv "$self_dir/temp/workspace/F-Droid.apk" "$lineage_srcdir/packages/apps/FDroid"
-  mv "$self_dir/temp/workspace/F-DroidPrivilegedExtension.apk" "$lineage_srcdir/packages/apps/FDroidPriv"
-  mv "$self_dir/temp/workspace/permissions_org.fdroid.fdroid.privileged.xml" "$lineage_srcdir/packages/apps/FDroidPriv"
+  mv "$self_dir/temp/workspace/F-Droid.apk" "$lineage_srcdir/packages/apps/F-Droid"
+  mv "$self_dir/temp/workspace/F-DroidPrivilegedExtension.apk" "$lineage_srcdir/packages/apps/F-DroidPrivilegedExtension"
+  mv "$self_dir/temp/workspace/permissions_org.fdroid.fdroid.privileged.xml" "$lineage_srcdir/packages/apps/F-DroidPrivilegedExtension"
 fi
