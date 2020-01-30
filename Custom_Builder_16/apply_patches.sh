@@ -43,12 +43,20 @@ popd 1>/dev/null
 
 #fdroid patches
 if [[ $with_fdroid = true ]]; then
+  mkdir -p "$lineage_srcdir/packages/apps/FDroid"
+  mkdir -p "$lineage_srcdir/packages/apps/FDroidPriv"
+
+  #patch makefiles to include fdroid into build
   pushd 1>/dev/null "$lineage_srcdir"
   patches_dir="patches/fdroid"
   source "$self_dir/quilt_set.sh.in"
-  [[ -d $QUILT_PATCHES ]] && echo "processing patches from directory $patches_dir" && quilt push -a -f
+  [[ -d $QUILT_PATCHES ]] && echo "processing patches from directory $patches_dir" && quilt push -a
   source "$self_dir/quilt_unset.sh.in"
   popd 1>/dev/null
 
+  #download and install fdroid files
   "$self_dir/../FDroid_OTA_Packager/scripts/01-download.sh" "$fdroid_url" "$self_dir/temp"
+  mv "$self_dir/temp/workspace/F-Droid.apk" "$lineage_srcdir/packages/apps/FDroid"
+  mv "$self_dir/temp/workspace/F-DroidPrivilegedExtension.apk" "$lineage_srcdir/packages/apps/FDroidPriv"
+  mv "$self_dir/temp/workspace/permissions_org.fdroid.fdroid.privileged.xml" "$lineage_srcdir/packages/apps/FDroidPriv"
 fi
