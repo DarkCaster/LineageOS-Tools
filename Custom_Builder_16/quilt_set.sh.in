@@ -10,4 +10,6 @@
 [[ -z $patches_dir ]] && patches_dir="$target_device"
 
 export QUILT_PATCHES="$self_dir/$patches_dir"
+
 rm -rf "$self_dir/.pc"
+rm -rf "$PWD/.pc"
