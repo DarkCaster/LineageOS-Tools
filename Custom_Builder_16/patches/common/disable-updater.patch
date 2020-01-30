@@ -1,0 +1,27 @@
+Index: Lineage16/vendor/lineage/config/common.mk
+===================================================================
+--- Lineage16.orig/vendor/lineage/config/common.mk
++++ Lineage16/vendor/lineage/config/common.mk
+@@ -162,7 +162,6 @@ PRODUCT_PACKAGES += \
+     Jelly \
+     LockClock \
+     TrebuchetQuickStep \
+-    Updater \
+     WeatherProvider
+ 
+ # Exchange support
+Index: Lineage16/vendor/lineage/config/permissions/privapp-permissions-lineage.xml
+===================================================================
+--- Lineage16.orig/vendor/lineage/config/permissions/privapp-permissions-lineage.xml
++++ Lineage16/vendor/lineage/config/permissions/privapp-permissions-lineage.xml
+@@ -95,10 +95,4 @@
+         <permission name="android.permission.WRITE_MEDIA_STORAGE"/>
+     </privapp-permissions>
+ 
+-    <privapp-permissions package="org.lineageos.updater">
+-        <permission name="android.permission.ACCESS_CACHE_FILESYSTEM"/>
+-        <permission name="android.permission.REBOOT"/>
+-        <permission name="android.permission.RECOVERY"/>
+-    </privapp-permissions>
+-
+ </permissions>
