@@ -1,0 +1,33 @@
+Index: Lineage16/packages/apps/FDroidPriv/Android.mk
+===================================================================
+--- /dev/null
++++ Lineage16/packages/apps/FDroidPriv/Android.mk
+@@ -0,0 +1,11 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_MODULE := FDroidPriv
++LOCAL_CERTIFICATE := PRESIGNED
++LOCAL_SRC_FILES := F-DroidPrivilegedExtension.apk
++LOCAL_MODULE_CLASS := APPS
++LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
++LOCAL_PRIVILEGED_MODULE := true
++TARGET_OUT_DATA_APPS_PRIVILEGED := $(TARGET_OUT_DATA)/priv-app
++include $(BUILD_PREBUILT)
+Index: Lineage16/vendor/lineage/config/common.mk
+===================================================================
+--- Lineage16.orig/vendor/lineage/config/common.mk
++++ Lineage16/vendor/lineage/config/common.mk
+@@ -129,6 +129,12 @@ PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+ PRODUCT_PACKAGES += \
+     FDroid
+ 
++PRODUCT_PACKAGES += \
++    FDroidPriv
++
++PRODUCT_COPY_FILES += \
++    packages/apps/FDroidPriv/permissions_org.fdroid.fdroid.privileged.xml:system/etc/permissions/permissions_org.fdroid.fdroid.privileged.xml
++
+ # Bootanimation
+ PRODUCT_PACKAGES += \
+     bootanimation.zip

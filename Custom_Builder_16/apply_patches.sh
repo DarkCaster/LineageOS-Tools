@@ -55,6 +55,7 @@ if [[ $with_fdroid = true ]]; then
   popd 1>/dev/null
 
   #download and install fdroid files
+  rm -rf "$self_dir/temp/workspace"
   "$self_dir/../FDroid_OTA_Packager/scripts/01-download.sh" "$fdroid_url" "$self_dir/temp"
   mv "$self_dir/temp/workspace/F-Droid.apk" "$lineage_srcdir/packages/apps/FDroid"
   mv "$self_dir/temp/workspace/F-DroidPrivilegedExtension.apk" "$lineage_srcdir/packages/apps/FDroidPriv"
