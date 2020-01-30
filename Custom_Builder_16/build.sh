@@ -24,7 +24,7 @@ shift 3
 
 ### other settings
 
-cleanup_srcdir="false"
+cleanup_srcdir="true"
 skip_patches="false"
 
 #embed su addon
