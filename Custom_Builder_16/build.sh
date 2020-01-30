@@ -24,7 +24,7 @@ shift 3
 
 ### other settings
 
-cleanup_srcdir="true"
+cleanup_srcdir="false"
 skip_patches="false"
 
 #embed su addon
@@ -34,6 +34,7 @@ export WITH_SU="true"
 
 [[ ! -d $lineage_srcdir ]] && echo "lineage source directory is missing :$lineage_srcdir" && show_usage
 [[ $target != "ota" ]] && skip_patches="true"
+[[ $cleanup_srcdir != true ]] && skip_patches="true"
 
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
@@ -124,4 +125,3 @@ pushd 1>/dev/null
 
 echo "cleaning up"
 rm -rf "$self_dir/temp"
-[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" pop "$target_device"
