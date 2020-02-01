@@ -2,7 +2,7 @@ Index: Lineage16/vendor/lineage/config/common.mk
 ===================================================================
 --- Lineage16.orig/vendor/lineage/config/common.mk
 +++ Lineage16/vendor/lineage/config/common.mk
-@@ -162,7 +162,6 @@ PRODUCT_PACKAGES += \
+@@ -152,7 +152,6 @@ PRODUCT_PACKAGES += \
      Jelly \
      LockClock \
      TrebuchetQuickStep \
