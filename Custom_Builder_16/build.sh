@@ -52,7 +52,7 @@ clear_srcdir() {
 if [[ $cleanup_srcdir = true ]]; then
   clear_srcdir
   pushd 1>/dev/null "$lineage_srcdir"
-  repo sync -c
+  repo sync -l
   popd 1>/dev/null
 fi
 
