@@ -18,8 +18,10 @@ device="$2"
 
 fdroid_url="https://f-droid.org/repo/org.fdroid.fdroid.privileged.ota_2110.zip"
 fdroid_url_standalone="https://f-droid.org/repo/org.fdroid.fdroid_1007051.apk"
+qksms_url="https://f-droid.org/repo/com.moez.QKSMS_2213.apk"
 with_fdroid="true"
 with_fdroid_priv="false"
+with_qksms="true"
 
 ### end of settings
 
@@ -68,4 +70,19 @@ if [[ $with_fdroid = true ]]; then
     rm -fv "$lineage_srcdir/packages/apps/F-Droid/F-Droid.apk"
     wget -O "$lineage_srcdir/packages/apps/F-Droid/F-Droid.apk" "$fdroid_url_standalone"
   fi
+fi
+
+#qksms patches
+if [[ $with_qksms = true ]]; then
+  mkdir -p "$lineage_srcdir/packages/apps/QKSMS"
+  #patch makefiles to include qksms into build
+  pushd 1>/dev/null "$lineage_srcdir"
+  patches_dir="patches/qksms"
+  source "$self_dir/quilt_set.sh.in"
+  [[ -d $QUILT_PATCHES ]] && echo "processing patches from directory $patches_dir" && quilt push -a
+  source "$self_dir/quilt_unset.sh.in"
+  popd 1>/dev/null
+
+  rm -fv "$lineage_srcdir/packages/apps/QKSMS/QKSMS.apk"
+  wget -O "$lineage_srcdir/packages/apps/QKSMS/QKSMS.apk" "$qksms_url"
 fi

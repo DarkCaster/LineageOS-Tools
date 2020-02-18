@@ -1,0 +1,29 @@
+Index: Lineage16/packages/apps/QKSMS/Android.mk
+===================================================================
+--- /dev/null
++++ Lineage16/packages/apps/QKSMS/Android.mk
+@@ -0,0 +1,9 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_MODULE := QKSMS
++LOCAL_CERTIFICATE := PRESIGNED
++LOCAL_SRC_FILES := QKSMS.apk
++LOCAL_MODULE_CLASS := APPS
++LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
++include $(BUILD_PREBUILT)
+Index: Lineage16/vendor/lineage/config/common.mk
+===================================================================
+--- Lineage16.orig/vendor/lineage/config/common.mk
++++ Lineage16/vendor/lineage/config/common.mk
+@@ -133,6 +133,10 @@ PRODUCT_PACKAGES += \
+ PRODUCT_PACKAGES += \
+     bootanimation.zip
+ 
++# QKSMS
++PRODUCT_PACKAGES += \
++    QKSMS
++
+ # Required Lineage packages
+ PRODUCT_PACKAGES += \
+     LineageParts \
