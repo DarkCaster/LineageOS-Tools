@@ -56,7 +56,13 @@ if [[ $cleanup_srcdir = true ]]; then
   popd 1>/dev/null
 fi
 
-[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" push "$target_device"
+export BUILDER_VENDOR_DIR_BASE="vendor"
+
+if [[ -f "$self_dir/patches/$target_device.sh.in" ]]; then
+  echo "sourcing $self_dir/patches/$target_device.sh.in"
+  . "$self_dir/patches/$target_device.sh.in"
+fi
+[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" "$target_device"
 mkdir -p "$self_dir/output/$target_device"
 
 pushd 1>/dev/null "$lineage_srcdir"
@@ -98,7 +104,8 @@ elif [[ $target = "ota" ]]; then
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
   check_errors
   echo "extracting vendor files"
-  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/vendor"
+  mkdir -p "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
   check_errors
   echo "preparing build"
   breakfast "$target_device"

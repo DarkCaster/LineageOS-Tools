@@ -25,6 +25,11 @@ with_qksms="true"
 
 ### end of settings
 
+# apply overrides
+[[ $BUILDER_DISABLE_QKSMS = true ]] && with_qksms="false"
+[[ $BUILDER_DISABLE_FDROID = true ]] && with_fdroid="false"
+[[ $BUILDER_DISABLE_FDROID_PRIV = true ]] && with_fdroid_priv="false"
+
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
 

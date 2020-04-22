@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+
+#extra defines and overrides for asus me176c device
+export BUILDER_VENDOR_DIR_BASE="device/asus/K013/firmware"
+export BUILDER_DISABLE_QKSMS="true"
+
+#extra script to run before build
+[[ $skip_patches != true ]] && ./device/asus/K013/patches/apply.sh aosp
