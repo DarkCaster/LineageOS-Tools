@@ -103,7 +103,7 @@ elif [[ $target = "ota" ]]; then
   echo "extracting signing-keys"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
   check_errors
-  echo "extracting vendor files"
+  echo "extracting vendor files from $target_device.enc archive to $lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
   mkdir -p "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
   check_errors
