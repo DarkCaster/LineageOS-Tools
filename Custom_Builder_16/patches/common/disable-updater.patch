@@ -2,14 +2,13 @@ Index: Lineage16/vendor/lineage/config/common.mk
 ===================================================================
 --- Lineage16.orig/vendor/lineage/config/common.mk
 +++ Lineage16/vendor/lineage/config/common.mk
-@@ -152,7 +152,6 @@ PRODUCT_PACKAGES += \
-     Jelly \
-     LockClock \
-     TrebuchetQuickStep \
--    Updater \
-     WeatherProvider
- 
- # Exchange support
+@@ -134,5 +134,4 @@ PRODUCT_PACKAGES += \
+     LineageSettingsProvider \
+-    LineageSetupWizard \
+-    Updater
++    LineageSetupWizard
+
+ # Extra tools in Lineage
 Index: Lineage16/vendor/lineage/config/permissions/privapp-permissions-lineage.xml
 ===================================================================
 --- Lineage16.orig/vendor/lineage/config/permissions/privapp-permissions-lineage.xml
