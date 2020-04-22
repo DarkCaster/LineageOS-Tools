@@ -6,4 +6,9 @@ export BUILDER_VENDOR_DIR_BASE="device/asus/K013/firmware"
 export BUILDER_DISABLE_QKSMS="true"
 
 #extra script to run before build
-[[ $skip_patches != true ]] && ./device/asus/K013/patches/apply.sh aosp
+
+if [[ $skip_patches != true ]]; then
+  pushd "$lineage_srcdir"
+  device/asus/K013/patches/apply.sh aosp
+  popd
+fi
