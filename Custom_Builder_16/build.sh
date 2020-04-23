@@ -9,39 +9,39 @@ show_usage() {
 }
 
 #lineage source directory
-lineage_srcdir="$1"
-[[ -z $lineage_srcdir ]] && show_usage
+__lineage_srcdir="$1"
+[[ -z $__lineage_srcdir ]] && show_usage
 
 #device
-target_device="$2"
-[[ -z $target_device ]] && show_usage
+__target_device="$2"
+[[ -z $__target_device ]] && show_usage
 
 #what to build: ota - signed OTA update archive; vendor - populate vendor archive; keys - (re)create sign keys
-target="$3"
-[[ -z $target ]] && show_usage
+__target="$3"
+[[ -z $__target ]] && show_usage
 
 shift 3
 
 ### other settings
 
-cleanup_srcdir="true"
-skip_patches="false"
+__cleanup_srcdir="true"
+__skip_patches="false"
 
 #embed su addon
 export WITH_SU="true"
 
 ### end of settings
 
-[[ ! -d $lineage_srcdir ]] && echo "lineage source directory is missing :$lineage_srcdir" && show_usage
-[[ $target != "ota" ]] && skip_patches="true"
-[[ $cleanup_srcdir != true ]] && skip_patches="true"
+[[ ! -d $__lineage_srcdir ]] && echo "lineage source directory is missing :$__lineage_srcdir" && show_usage
+[[ $__target != "ota" ]] && __skip_patches="true"
+[[ $__cleanup_srcdir != true ]] && __skip_patches="true"
 
 self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
 
 clear_srcdir() {
   echo "cleaning up sources directory"
-  pushd 1>/dev/null "$lineage_srcdir"
+  pushd 1>/dev/null "$__lineage_srcdir"
   for victim in * .*; do
     [[ $victim = "*" || $victim = "." || $victim = ".." || $victim = ".repo" ]] && continue
     rm -rf "$victim"
@@ -49,23 +49,23 @@ clear_srcdir() {
   popd 1>/dev/null
 }
 
-if [[ $cleanup_srcdir = true ]]; then
+if [[ $__cleanup_srcdir = true ]]; then
   clear_srcdir
-  pushd 1>/dev/null "$lineage_srcdir"
+  pushd 1>/dev/null "$__lineage_srcdir"
   repo sync -l
   popd 1>/dev/null
 fi
 
 export BUILDER_VENDOR_DIR_BASE="vendor"
 
-if [[ -f "$self_dir/patches/$target_device.sh.in" ]]; then
-  echo "sourcing $self_dir/patches/$target_device.sh.in"
-  . "$self_dir/patches/$target_device.sh.in"
+if [[ -f "$self_dir/patches/$__target_device.sh.in" ]]; then
+  echo "sourcing $self_dir/patches/$__target_device.sh.in"
+  . "$self_dir/patches/$__target_device.sh.in"
 fi
-[[ $skip_patches != true ]] && "$self_dir/apply_patches.sh" "$lineage_srcdir" "$target_device"
-mkdir -p "$self_dir/output/$target_device"
+[[ $__skip_patches != true ]] && "$self_dir/apply_patches.sh" "$__lineage_srcdir" "$__target_device"
+mkdir -p "$self_dir/output/$__target_device"
 
-pushd 1>/dev/null "$lineage_srcdir"
+pushd 1>/dev/null "$__lineage_srcdir"
 
 check_errors() {
   local status="$?"
@@ -76,15 +76,15 @@ check_errors() {
   fi
 }
 
-echo "running $target target"
-if [[ $target = "vendor" ]]; then
+echo "running $__target target"
+if [[ $__target = "vendor" ]]; then
   vendor="$1"
   [[ -z $vendor ]] && echo "please provide device vendor name as the last parameter" && show_usage
   echo "preparing build env"
   set +e
   source build/envsetup.sh
-  breakfast "$target_device" || echo "fail was expected at this stage..."
-  pushd 1>/dev/null "device/$vendor/$target_device"
+  breakfast "$__target_device" || echo "fail was expected at this stage..."
+  pushd 1>/dev/null "device/$vendor/$__target_device"
   check_errors
   echo "extracting vendor files"
   ./extract-files.sh
@@ -92,23 +92,23 @@ if [[ $target = "vendor" ]]; then
   popd 1>/dev/null
   set -e
   echo "creating new vendor-files archive"
-  "$self_dir/scripts/create-vendor-files-archive.sh" "$lineage_srcdir" "$vendor" "$self_dir/private/$target_device.enc"
-elif [[ $target = "keys" ]]; then
+  "$self_dir/scripts/create-vendor-files-archive.sh" "$__lineage_srcdir" "$vendor" "$self_dir/private/$__target_device.enc"
+elif [[ $__target = "keys" ]]; then
   echo "generating new signing-keys and creating encrypted archive for storing it within repo"
-  "$self_dir/scripts/generate-keys.sh" "$lineage_srcdir" "$self_dir/private/keys.enc"
-elif [[ $target = "ota" ]]; then
+  "$self_dir/scripts/generate-keys.sh" "$__lineage_srcdir" "$self_dir/private/keys.enc"
+elif [[ $__target = "ota" ]]; then
   echo "preparing build env"
   set +e
   source build/envsetup.sh
   echo "extracting signing-keys"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
   check_errors
-  echo "extracting vendor files from $target_device.enc archive to $lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
-  mkdir -p "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
-  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$target_device.enc" "$lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+  echo "extracting vendor files from $__target_device.enc archive to $__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+  mkdir -p "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$__target_device.enc" "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
   check_errors
   echo "preparing build"
-  breakfast "$target_device"
+  breakfast "$__target_device"
   check_errors
   echo "running build"
   mka target-files-package otatools
@@ -120,12 +120,12 @@ elif [[ $target = "ota" ]]; then
   ./build/tools/releasetools/ota_from_target_files -k "$self_dir/temp/keys/releasekey" --block signed-target_files.zip signed-ota_update.zip
   check_errors
   set -e
-  echo "saving build results to directory: $self_dir/output/$target_device"
+  echo "saving build results to directory: $self_dir/output/$__target_device"
   build_date=$(date +%Y%m%d_%H%M)
-  mv signed-target_files.zip "$self_dir/output/$target_device/target_files_${target_device}_${build_date}.zip"
-  mv signed-ota_update.zip "$self_dir/output/$target_device/ota_update_${target_device}_${build_date}.zip"
+  mv signed-target_files.zip "$self_dir/output/$__target_device/target_files_${__target_device}_${build_date}.zip"
+  mv signed-ota_update.zip "$self_dir/output/$__target_device/ota_update_${__target_device}_${build_date}.zip"
 else
-  echo "unknown or unimplemented target: $target"
+  echo "unknown or unimplemented target: $__target"
 fi
 
 pushd 1>/dev/null

@@ -7,8 +7,8 @@ export BUILDER_DISABLE_QKSMS="true"
 
 #extra script to run before build
 
-if [[ $skip_patches != true ]]; then
-  pushd "$lineage_srcdir"
+if [[ $__skip_patches != true ]]; then
+  pushd "$__lineage_srcdir"
   device/asus/K013/patches/apply.sh aosp
   popd
 fi
