@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+
+#
+# this script should be sourced into current env
+# PWD should be on same level
+#
+
+[[ -z $self_dir ]] && self_dir="$PWD"
+
+unset QUILT_PATCHES
+unset patches_dir
+
+rm -rf "$self_dir/.pc"
+rm -rf "$PWD/.pc"

@@ -1,0 +1,29 @@
+Index: Lineage16/packages/apps/FDroid/Android.mk
+===================================================================
+--- /dev/null
++++ Lineage16/packages/apps/F-Droid/Android.mk
+@@ -0,0 +1,9 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_MODULE := F-Droid
++LOCAL_CERTIFICATE := PRESIGNED
++LOCAL_SRC_FILES := F-Droid.apk
++LOCAL_MODULE_CLASS := APPS
++LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
++include $(BUILD_PREBUILT)
+Index: Lineage16/vendor/lineage/config/common.mk
+===================================================================
+--- Lineage16.orig/vendor/lineage/config/common.mk
++++ Lineage16/vendor/lineage/config/common.mk
+@@ -125,6 +125,10 @@ PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD :
+ # leave less information available via JDWP.
+ PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+ 
++# FDroid
++PRODUCT_PACKAGES += \
++    F-Droid
++
+ # Bootanimation
+ PRODUCT_PACKAGES += \
+     bootanimation.zip

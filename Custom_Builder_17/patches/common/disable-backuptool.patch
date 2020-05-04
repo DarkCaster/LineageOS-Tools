@@ -1,0 +1,13 @@
+Index: Lineage16/system/update_engine/payload_consumer/postinstall_runner_action.cc
+===================================================================
+--- Lineage16.orig/system/update_engine/payload_consumer/postinstall_runner_action.cc
++++ Lineage16/system/update_engine/payload_consumer/postinstall_runner_action.cc
+@@ -174,7 +174,7 @@ void PostinstallRunnerAction::PerformPar
+ 
+   LOG(INFO) << current_device << " has been mounted R/W " << mount_count << " times.";
+ 
+-  if (mount_count > 0) {
++  if (0) {
+     // Mount the target partition R/W
+     LOG(INFO) << "Running backuptool scripts";
+     utils::MountFilesystem(mountable_device, fs_mount_dir_, MS_NOATIME | MS_NODEV | MS_NODIRATIME,
