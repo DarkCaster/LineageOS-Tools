@@ -1,8 +1,8 @@
-Index: Lineage16/system/update_engine/payload_consumer/postinstall_runner_action.cc
+Index: Lineage17/system/update_engine/payload_consumer/postinstall_runner_action.cc
 ===================================================================
---- Lineage16.orig/system/update_engine/payload_consumer/postinstall_runner_action.cc
-+++ Lineage16/system/update_engine/payload_consumer/postinstall_runner_action.cc
-@@ -174,7 +174,7 @@ void PostinstallRunnerAction::PerformPar
+--- Lineage17.orig/system/update_engine/payload_consumer/postinstall_runner_action.cc
++++ Lineage17/system/update_engine/payload_consumer/postinstall_runner_action.cc
+@@ -187,7 +187,7 @@ void PostinstallRunnerAction::PerformPar
  
    LOG(INFO) << current_device << " has been mounted R/W " << mount_count << " times.";
  
