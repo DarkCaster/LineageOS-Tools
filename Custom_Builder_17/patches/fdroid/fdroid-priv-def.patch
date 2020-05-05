@@ -1,7 +1,7 @@
-Index: Lineage16/packages/apps/FDroidPriv/Android.mk
+Index: Lineage17/packages/apps/FDroidPriv/Android.mk
 ===================================================================
 --- /dev/null
-+++ Lineage16/packages/apps/F-DroidPrivilegedExtension/Android.mk
++++ Lineage17/packages/apps/F-DroidPrivilegedExtension/Android.mk
 @@ -0,0 +1,11 @@
 +LOCAL_PATH := $(call my-dir)
 +include $(CLEAR_VARS)
@@ -14,11 +14,11 @@ Index: Lineage16/packages/apps/FDroidPriv/Android.mk
 +LOCAL_PRIVILEGED_MODULE := true
 +TARGET_OUT_DATA_APPS_PRIVILEGED := $(TARGET_OUT_DATA)/priv-app
 +include $(BUILD_PREBUILT)
-Index: Lineage16/vendor/lineage/config/common.mk
+Index: Lineage17/vendor/lineage/config/common.mk
 ===================================================================
---- Lineage16.orig/vendor/lineage/config/common.mk
-+++ Lineage16/vendor/lineage/config/common.mk
-@@ -129,6 +129,12 @@ PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+--- Lineage17.orig/vendor/lineage/config/common.mk
++++ Lineage17/vendor/lineage/config/common.mk
+@@ -129,6 +129,12 @@ PRODUCT_RESTRICT_VENDOR_FILES := false
  PRODUCT_PACKAGES += \
      F-Droid
  
