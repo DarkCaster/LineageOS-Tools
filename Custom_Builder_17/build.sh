@@ -33,6 +33,7 @@ export WITH_SU="true"
 ### end of settings
 
 [[ ! -d $__lineage_srcdir ]] && echo "lineage source directory is missing :$__lineage_srcdir" && show_usage
+[[ $__target = "keys" ]] && __cleanup_srcdir="false"
 [[ $__target != "ota" ]] && __skip_patches="true"
 [[ $__cleanup_srcdir != true ]] && __skip_patches="true"
 
