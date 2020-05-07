@@ -27,9 +27,6 @@ shift 3
 __cleanup_srcdir="true"
 __skip_patches="false"
 
-#embed su addon
-export WITH_SU="true"
-
 ### end of settings
 
 [[ ! -d $__lineage_srcdir ]] && echo "lineage source directory is missing :$__lineage_srcdir" && show_usage
