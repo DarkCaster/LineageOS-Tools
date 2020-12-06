@@ -17,7 +17,7 @@ device="$2"
 ### settings
 
 fdroid_url="https://f-droid.org/repo/org.fdroid.fdroid.privileged.ota_2110.zip"
-fdroid_url_standalone="https://f-droid.org/repo/org.fdroid.fdroid_1008050.apk"
+fdroid_url_standalone="https://f-droid.org/repo/org.fdroid.fdroid_1010050.apk"
 qksms_url="https://f-droid.org/repo/com.moez.QKSMS_2213.apk"
 with_fdroid="true"
 with_fdroid_priv="false"
