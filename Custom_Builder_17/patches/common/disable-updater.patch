@@ -2,25 +2,10 @@ Index: Lineage17/vendor/lineage/config/common.mk
 ===================================================================
 --- Lineage17.orig/vendor/lineage/config/common.mk
 +++ Lineage17/vendor/lineage/config/common.mk
-@@ -130,5 +130,4 @@ PRODUCT_PACKAGES += \
+@@ -115,5 +115,4 @@ PRODUCT_PACKAGES += \
      LineageSettingsProvider \
 -    LineageSetupWizard \
 -    Updater
 +    LineageSetupWizard
 
  # Themes
-Index: Lineage17/vendor/lineage/config/permissions/privapp-permissions-lineage-system.xml
-===================================================================
---- Lineage17.orig/vendor/lineage/config/permissions/privapp-permissions-lineage-system.xml
-+++ Lineage17/vendor/lineage/config/permissions/privapp-permissions-lineage-system.xml
-@@ -75,10 +75,4 @@
-         <permission name="lineage.permission.PREVENT_POWER_KEY"/>
-     </privapp-permissions>
- 
--    <privapp-permissions package="org.lineageos.updater">
--        <permission name="android.permission.ACCESS_CACHE_FILESYSTEM"/>
--        <permission name="android.permission.REBOOT"/>
--        <permission name="android.permission.RECOVERY"/>
--    </privapp-permissions>
--
- </permissions>
