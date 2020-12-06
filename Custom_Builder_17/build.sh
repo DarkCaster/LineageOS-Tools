@@ -78,6 +78,8 @@ echo "running $__target target"
 if [[ $__target = "vendor" ]]; then
   vendor="$1"
   [[ -z $vendor ]] && echo "please provide device vendor name as the last parameter" && show_usage
+  mnt_dir="$2"
+  [[ ! -z $mnt_dir ]] && echo "trying to get vendor files from directory: $mnt_dir"
   echo "preparing build env"
   set +e
   source build/envsetup.sh
@@ -85,8 +87,13 @@ if [[ $__target = "vendor" ]]; then
   pushd 1>/dev/null "device/$vendor/$__target_device"
   check_errors
   echo "extracting vendor files"
-  ./extract-files.sh
-  check_errors
+  if [[ -z $mnt_dir ]]; then
+    ./extract-files.sh
+    check_errors
+  else
+    ./extract-files.sh "$mnt_dir"
+    check_errors
+  fi
   popd 1>/dev/null
   set -e
   echo "creating new vendor-files archive"
