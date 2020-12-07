@@ -31,7 +31,7 @@ __skip_patches="false"
 
 [[ ! -d $__lineage_srcdir ]] && echo "lineage source directory is missing :$__lineage_srcdir" && show_usage
 [[ $__target = "keys" ]] && __cleanup_srcdir="false"
-[[ $__target != "ota" ]] && __skip_patches="true"
+[[ $__target != "ota" && $__target != "ota+vendor" ]] && __skip_patches="true"
 [[ $__cleanup_srcdir != true ]] && __skip_patches="true"
 
 self_dir="$(cd "$(dirname "$0")" && pwd)"
@@ -101,17 +101,34 @@ if [[ $__target = "vendor" ]]; then
 elif [[ $__target = "keys" ]]; then
   echo "generating new signing-keys and creating encrypted archive for storing it within repo"
   "$self_dir/scripts/generate-keys.sh" "$__lineage_srcdir" "$self_dir/private/keys.enc"
-elif [[ $__target = "ota" ]]; then
+elif [[ $__target = "ota" || $__target = "ota+vendor" ]]; then
   echo "preparing build env"
   set +e
   source build/envsetup.sh
   echo "extracting signing-keys"
   "$self_dir/scripts/extract-archive.sh" "$self_dir/private/keys.enc" "$self_dir/temp"
   check_errors
-  echo "extracting vendor files from $__target_device.enc archive to $__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
-  mkdir -p "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
-  "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$__target_device.enc" "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
-  check_errors
+  if [[ $__target = "ota" ]]; then
+    echo "extracting vendor files from $__target_device.enc archive to $__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+    mkdir -p "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+    "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$__target_device.enc" "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
+    check_errors
+  else
+    mnt_dir="$2"
+    [[ ! -z $mnt_dir ]] && echo "trying to get vendor files from directory: $mnt_dir"
+    breakfast "$__target_device" || echo "fail was expected at this stage..."
+    pushd 1>/dev/null "device/$vendor/$__target_device"
+    check_errors
+    echo "extracting vendor files"
+    if [[ -z $mnt_dir ]]; then
+      ./extract-files.sh
+      check_errors
+    else
+      ./extract-files.sh "$mnt_dir"
+      check_errors
+    fi
+    popd 1>/dev/null
+  fi
   echo "preparing build"
   breakfast "$__target_device"
   check_errors

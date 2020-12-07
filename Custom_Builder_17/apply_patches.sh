@@ -34,12 +34,12 @@ self_dir="$(cd "$(dirname "$0")" && pwd)"
 scripts_dir="$self_dir/scripts"
 
 #common patches
-#pushd 1>/dev/null "$lineage_srcdir"
-#patches_dir="patches/common"
-#source "$self_dir/quilt_set.sh.in"
-#[[ -d $QUILT_PATCHES ]] && echo "processing patches from directory $patches_dir" && quilt push -a
-#source "$self_dir/quilt_unset.sh.in"
-#popd 1>/dev/null
+pushd 1>/dev/null "$lineage_srcdir"
+patches_dir="patches/common"
+source "$self_dir/quilt_set.sh.in"
+[[ -d $QUILT_PATCHES ]] && echo "processing patches from directory $patches_dir" && quilt push -a
+source "$self_dir/quilt_unset.sh.in"
+popd 1>/dev/null
 
 #device patches
 pushd 1>/dev/null "$lineage_srcdir"
