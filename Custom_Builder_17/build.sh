@@ -114,6 +114,8 @@ elif [[ $__target = "ota" || $__target = "ota+vendor" ]]; then
     "$self_dir/scripts/extract-archive.sh" "$self_dir/private/$__target_device.enc" "$__lineage_srcdir/$BUILDER_VENDOR_DIR_BASE"
     check_errors
   else
+    vendor="$1"
+    [[ -z $vendor ]] && echo "please provide device vendor name as the last parameter" && show_usage
     mnt_dir="$2"
     [[ ! -z $mnt_dir ]] && echo "trying to get vendor files from directory: $mnt_dir"
     breakfast "$__target_device" || echo "fail was expected at this stage..."
