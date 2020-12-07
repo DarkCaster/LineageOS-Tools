@@ -4,7 +4,7 @@ defaults.recalculate_orig=defaults.recalculate
 
 function defaults.recalculate()
   tunables.features.x11host_target_dir="/dev/null"
-  tunables.datadir=loader.path.combine(loader.workdir,"userdata-lineage-dev")
+  tunables.datadir=loader.path.combine(tunables.configdir,"userdata")
   defaults.recalculate_orig()
   defaults.mounts.resolvconf_mount=defaults.mounts.direct_resolvconf_mount
   defaults.mounts.hosts_mount=defaults.mounts.direct_hosts_mount
@@ -63,6 +63,16 @@ table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/keys"
 table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/logs"'});
 table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/userscripts"'});
 
+-- copy builder scripts
+table.insert(sandbox.setup.commands,{
+  'rm -rf "${cfg[tunables.configdir]}/builder"',
+  'mkdir -p "${cfg[tunables.configdir]}/builder"',
+  'cp -R "'..loader.workdir..'/src"/* "${cfg[tunables.configdir]}/builder"'
+});
+
+-- /root dir with build scripts
+table.insert(sandbox.setup.mounts,{prio=100,tag="_BUILDER","bind",loader.path.combine(tunables.configdir,"builder"),"/root"})
+
 table.insert(sandbox.setup.mounts,{prio=99,tag="_SRV_DIR","tmpfs","/srv"})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_MIRROR_DIR","bind",loader.path.combine(loader.workdir,"build","mirror"),_MIRROR_DIR})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_SRC_DIR","bind",loader.path.combine(loader.workdir,"build","src"),_SRC_DIR})
@@ -84,11 +94,28 @@ sandbox.bwrap_cmd={
   "bwrap"
 }
 
-shell.term_orphans=true
 shell.env_unset={"TERM","LANG","MAIL"}
 
--- define some variables, needed for build scripts
 shell.env_set={
+  {"TERM","xterm"},
+  {"LANG","en_US.UTF-8"}
+}
+
+build={
+  exec="/bin/bash",
+  args={"-l"},
+  path=_SRC_DIR,
+  env_set={},
+  term_signal=defaults.signals.SIGHUP,
+  exclusive=true,
+  attach=true,
+  pty=true,
+  term_on_interrupt=true,
+  term_orphans=true,
+}
+
+-- define some variables, needed for build scripts
+build.env_set={
   {"TERM","xterm"},
   {"LANG","en_US.UTF-8"},
 
