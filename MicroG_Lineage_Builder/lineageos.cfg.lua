@@ -63,15 +63,21 @@ table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/keys"
 table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/logs"'});
 table.insert(sandbox.setup.commands,{'mkdir -p "'..loader.workdir..'/build/userscripts"'});
 
--- copy builder scripts
+-- setup /root dir with build scripts
 table.insert(sandbox.setup.commands,{
   'rm -rf "${cfg[tunables.configdir]}/builder"',
   'mkdir -p "${cfg[tunables.configdir]}/builder"',
   'cp -R "'..loader.workdir..'/src"/* "${cfg[tunables.configdir]}/builder"'
 });
-
--- /root dir with build scripts
 table.insert(sandbox.setup.mounts,{prio=100,tag="_BUILDER","bind",loader.path.combine(tunables.configdir,"builder"),"/root"})
+
+-- save repo utility to home directory
+table.insert(sandbox.setup.commands,{
+  'mkdir -p "${cfg[tunables.auto.user_path]}/bin"',
+  'if [[ ! -f '..loader.workdir..'/build/repo ]]; then wget -O "'..loader.workdir..'/build/repo" "https://storage.googleapis.com/git-repo-downloads/repo"; else true; fi',
+  'cp "'..loader.workdir..'/build/repo" "${cfg[tunables.auto.user_path]}/bin/repo"',
+  'chmod a+x "${cfg[tunables.auto.user_path]}/bin/repo"',
+});
 
 table.insert(sandbox.setup.mounts,{prio=99,tag="_SRV_DIR","tmpfs","/srv"})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_MIRROR_DIR","bind",loader.path.combine(loader.workdir,"build","mirror"),_MIRROR_DIR})
