@@ -47,6 +47,12 @@ clear_srcdir() {
   popd 1>/dev/null
 }
 
+if [[ $__target = "clean" ]]; then
+  clear_srcdir
+  echo "clean complete"
+  exit 1
+fi
+
 if [[ $__cleanup_srcdir = true ]]; then
   clear_srcdir
   pushd 1>/dev/null "$__lineage_srcdir"
