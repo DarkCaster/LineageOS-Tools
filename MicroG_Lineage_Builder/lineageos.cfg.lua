@@ -59,10 +59,16 @@ _USERSCRIPTS_DIR="/srv/userscripts"
 -- create directories for that mounts at host-side
 table.insert(sandbox.setup.commands,{'\
   for d in mirror src tmp ccache logs; do \
-    [[ ! -e  "'..loader.workdir..'/build/$d" ]] && mkdir -p "'..loader.workdir..'/build/$d" \
+    if [[ ! -e  "'..loader.workdir..'/build/$d" ]]; then \
+      log "creating directory build/$d"; \
+      mkdir -p "'..loader.workdir..'/build/$d"; \
+    fi; \
   done; \
   for d in out keys local_manifests userscripts; do \
-    [[ ! -e  "'..loader.workdir..'/$d" ]] && mkdir -p "'..loader.workdir..'/$d" \
+    if [[ ! -e  "'..loader.workdir..'/$d" ]]; then \
+      log "creating directory $d"; \
+      mkdir -p "'..loader.workdir..'/$d"; \
+    fi; \
   done; \
 '});
 
@@ -78,7 +84,7 @@ table.insert(sandbox.setup.mounts,{prio=100,tag="_BUILDER","bind",loader.path.co
 -- save repo utility to home directory
 table.insert(sandbox.setup.commands,{
   'mkdir -p "${cfg[tunables.auto.user_path]}/bin"',
-  'if [[ ! -f '..loader.workdir..'/build/repo ]]; then wget -O "'..loader.workdir..'/build/repo" "https://storage.googleapis.com/git-repo-downloads/repo"; else true; fi',
+  'if [[ ! -f '..loader.workdir..'/build/repo ]]; then log "downloading repo utility"; wget -q -O "'..loader.workdir..'/build/repo" "https://storage.googleapis.com/git-repo-downloads/repo"; else true; fi',
   'cp "'..loader.workdir..'/build/repo" "${cfg[tunables.auto.user_path]}/bin/repo"',
   'chmod a+x "${cfg[tunables.auto.user_path]}/bin/repo"',
 });
