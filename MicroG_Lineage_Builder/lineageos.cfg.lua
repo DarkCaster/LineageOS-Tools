@@ -77,7 +77,11 @@ table.insert(sandbox.setup.commands,{
   'rm -rf "${cfg[tunables.configdir]}/builder"',
   'mkdir -p "${cfg[tunables.configdir]}/builder"',
   'cp -R "'..loader.workdir..'/CI_Scripts/src"/* "${cfg[tunables.configdir]}/builder"',
-  -- apply some patches to build script to work better inside sandboxer-container
+  -- allow init.sh to run scripts by sandboxer user
+  'sed -i "s|-user root|-user sandboxer|g" "${cfg[tunables.configdir]}/builder/init.sh"',
+  -- disable most of the logging (TODO: sandboxer logging feature may be used instead
+  'sed -i "s|\\s\\?&>>\\s\\?\\"\\$repo_log\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
+  'sed -i "s|\\s\\?&>>\\s\\?\\"\\$DEBUG_LOG\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
 });
 table.insert(sandbox.setup.mounts,{prio=100,tag="_BUILDER","bind",loader.path.combine(tunables.configdir,"builder"),"/root"})
 
