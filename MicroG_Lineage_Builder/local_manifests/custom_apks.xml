@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="local_sources_dir" fetch="file:///srv/local_sources"/>
+  <project name="custom_apks" path="prebuilts/custom_apks" remote="local_sources_dir" revision="master" />
+</manifest>
