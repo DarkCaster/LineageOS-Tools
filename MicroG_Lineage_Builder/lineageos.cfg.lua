@@ -56,6 +56,9 @@ _KEYS_DIR="/srv/keys"
 _LOGS_DIR="/srv/logs"
 _USERSCRIPTS_DIR="/srv/userscripts"
 
+-- local git repositories
+_LSOURCES_DIR="/srv/local_sources"
+
 -- create directories for that mounts at host-side
 table.insert(sandbox.setup.commands,{'\
   for d in mirror src tmp ccache logs; do \
@@ -64,7 +67,7 @@ table.insert(sandbox.setup.commands,{'\
       mkdir -p "'..loader.workdir..'/build/$d"; \
     fi; \
   done; \
-  for d in out keys local_manifests userscripts; do \
+  for d in out keys local_manifests local_sources userscripts; do \
     if [[ ! -e  "'..loader.workdir..'/$d" ]]; then \
       log "creating directory $d"; \
       mkdir -p "'..loader.workdir..'/$d"; \
@@ -104,6 +107,7 @@ table.insert(sandbox.setup.mounts,{prio=100,tag="_LMANIFEST_DIR","bind",loader.p
 table.insert(sandbox.setup.mounts,{prio=100,tag="_KEYS_DIR","bind",loader.path.combine(loader.workdir,"keys"),_KEYS_DIR})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_LOGS_DIR","bind",loader.path.combine(loader.workdir,"build","logs"),_LOGS_DIR})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_USERSCRIPTS_DIR","bind",loader.path.combine(loader.workdir,"userscripts"),_USERSCRIPTS_DIR})
+table.insert(sandbox.setup.mounts,{prio=100,tag="_LSOURCES_DIR","bind",loader.path.combine(loader.workdir,"local_sources"),_LSOURCES_DIR})
 
 -- just comment-out this whole block if sandbox not working because some of required utilities missing
 -- currently, this params should work only with my setup
