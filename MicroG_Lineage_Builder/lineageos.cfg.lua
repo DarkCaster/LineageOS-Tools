@@ -108,7 +108,7 @@ table.insert(sandbox.setup.mounts,{prio=100,tag="_USERSCRIPTS_DIR","bind",loader
 -- just comment-out this whole block if sandbox not working because some of required utilities missing
 -- currently, this params should work only with my setup
 sandbox.bwrap_cmd={
-  -- "netns-runner.sh", "vde_air", -- use my script to run sandbox inside separate network namespace
+  "netns-runner.sh", "vde_air", -- use my script to run sandbox inside separate network namespace
   "ionice","-c","3", -- set idle io-priority
   "nice","-n","19", -- set lowest CPU priority
   "taskset","--cpu-list","2,3,4,5,6,7,8,9,10,11,14,15,16,17,18,19,20,21,22,23", -- do not use 2 cores from my CPU for build, you config will be different
@@ -117,15 +117,11 @@ sandbox.bwrap_cmd={
 
 -- modify built-in "shell" exec profile
 shell.env_unset={"TERM","LANG","MAIL"}
-shell.env_set={
-  {"TERM","xterm"},
-  {"LANG","en_US.UTF-8"}
-}
 
 -- define exec-profile that will build lineage os
 build={
   exec="/bin/bash", -- TODO: change to /root/init.sh to run build right after invoke
-  args={},
+  args={"-c","export PATH=\"/home/sandboxer/bin:$PATH\"; /root/init.sh"},
   path=_SRC_DIR,
   env_unset={"TERM","LANG","MAIL"},
   env_set={}, -- defined below
@@ -182,3 +178,5 @@ build.env_set={
   {"BUILD_OVERLAY","false"},
   {"CRONTAB_TIME","now"},
 }
+
+shell.env_set=build.env_set
