@@ -109,6 +109,12 @@ table.insert(sandbox.setup.mounts,{prio=100,tag="_LOGS_DIR","bind",loader.path.c
 table.insert(sandbox.setup.mounts,{prio=100,tag="_USERSCRIPTS_DIR","bind",loader.path.combine(loader.workdir,"userscripts"),_USERSCRIPTS_DIR})
 table.insert(sandbox.setup.mounts,{prio=100,tag="_LSOURCES_DIR","bind",loader.path.combine(loader.workdir,"local_sources"),_LSOURCES_DIR})
 
+-- custom package-names to include may be passed via command-line
+build_packages=""
+for arg_idx,arg_val in ipairs() do
+  build_packages=build_packages..arg_val.." "
+end
+
 -- just comment-out this whole block if sandbox not working because some of required utilities missing
 -- currently, this params should work only with my setup
 sandbox.bwrap_cmd={
@@ -169,7 +175,6 @@ build.env_set={
   {"CLEAN_AFTER_BUILD","true"},
   {"WITH_SU","false"},
   {"ANDROID_JACK_VM_ARGS","-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G"},
-  {"CUSTOM_PACKAGES",""},
   {"SIGN_BUILDS","true"},
   {"KEYS_SUBJECT","/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com"},
   {"ZIP_SUBDIR","true"},
@@ -178,9 +183,11 @@ build.env_set={
   {"DELETE_OLD_ZIPS","0"},
   {"DELETE_OLD_LOGS","0"},
 
-  -- do not change these (unsupported when running with sandboxer)
-  {"BUILD_OVERLAY","false"},
-  {"CRONTAB_TIME","now"},
+  -- do not change these (unsupported when running with sandboxer, or defined differently)
+  {"BUILD_OVERLAY","false"}, -- not supported, do not change
+  {"CRONTAB_TIME","now"}, -- not supported, do not change
+  {"CUSTOM_PACKAGES",build_packages}, -- defined by passing package names via cmdline
 }
 
+-- shell profile will have same env as build profile
 shell.env_set=build.env_set
