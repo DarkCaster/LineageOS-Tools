@@ -111,7 +111,7 @@ table.insert(sandbox.setup.mounts,{prio=100,tag="_LSOURCES_DIR","bind",loader.pa
 
 -- custom package-names to include may be passed via command-line
 build_packages=""
-for arg_idx,arg_val in ipairs() do
+for arg_idx,arg_val in ipairs(loader.args) do
   build_packages=build_packages..arg_val.." "
 end
 
