@@ -85,6 +85,7 @@ table.insert(sandbox.setup.commands,{
   -- disable most of the logging (TODO: sandboxer logging feature may be used instead
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$repo_log\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$DEBUG_LOG\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
+  'sed -i "s|\\s\\?>>\\s\\?\\"\\$DEBUG_LOG\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
 });
 table.insert(sandbox.setup.mounts,{prio=100,tag="_BUILDER","bind",loader.path.combine(tunables.configdir,"builder"),"/root"})
 
