@@ -82,6 +82,8 @@ table.insert(sandbox.setup.commands,{
   'cp -R "'..loader.workdir..'/CI_Scripts/src"/* "${cfg[tunables.configdir]}/builder"',
   -- allow init.sh to run scripts by sandboxer user
   'sed -i "s|-user root|-user sandboxer|g" "${cfg[tunables.configdir]}/builder/init.sh"',
+  -- set userscripts permissions
+  'chmod -v 700 "'..loader.workdir..'/userscripts"/*',
   -- disable most of the logging (TODO: sandboxer logging feature may be used instead
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$repo_log\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$DEBUG_LOG\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
