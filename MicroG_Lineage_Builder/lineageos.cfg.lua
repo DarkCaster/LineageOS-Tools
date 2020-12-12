@@ -83,7 +83,7 @@ table.insert(sandbox.setup.commands,{
   -- allow init.sh to run scripts by sandboxer user
   'sed -i "s|-user root|-user sandboxer|g" "${cfg[tunables.configdir]}/builder/init.sh"',
   -- set userscripts permissions
-  'chmod -v 700 "'..loader.workdir..'/userscripts"/*',
+  'chmod 700 "'..loader.workdir..'/userscripts"/*',
   -- disable most of the logging (TODO: sandboxer logging feature may be used instead
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$repo_log\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
   'sed -i "s|\\s\\?&>>\\s\\?\\"\\$DEBUG_LOG\\"||g" "${cfg[tunables.configdir]}/builder/build.sh"',
@@ -121,7 +121,7 @@ end
 -- just comment-out this whole block if sandbox not working because some of required utilities missing
 -- currently, this params should work only with my setup
 sandbox.bwrap_cmd={
-  "netns-runner.sh", "vde_air", -- use my script to run sandbox inside separate network namespace
+  "netns-runner.sh", "vde_air", -- my script to start process-tree inside separate network namespace, comment this line
   "ionice","-c","3", -- set idle io-priority
   "nice","-n","19", -- set lowest CPU priority
   "taskset","--cpu-list","2,3,4,5,6,7,8,9,10,11,14,15,16,17,18,19,20,21,22,23", -- do not use 2 cores from my CPU for build, you config will be different
@@ -164,7 +164,7 @@ build.env_set={
 
   -- various config options
   {"USE_CCACHE","1"},
-  {"CCACHE_SIZE","50G"},
+  {"CCACHE_SIZE","12G"}, -- seems sufficient for two devices, if using compression with level 3 and above
   {"CCACHE_EXEC","/usr/bin/ccache"},
   {"BRANCH_NAME","lineage-17.1"}, -- OS version
   {"DEVICE_LIST","river"}, -- model of the device
